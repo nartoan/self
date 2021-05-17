@@ -1,0 +1,243 @@
+openapi: 3.0.0
+servers:
+  - url: 'https://www.tirp2.axnavi.com/calendar/api/REQ_FULL_CALENDAR_GET_FULL_CALENDAR'
+info:
+  title: WorkFlow API Reference
+  version: '1.0'
+tags:
+  - name: WorkFlow API
+paths:
+  "/":
+    post:
+      summary: List workflow teamplate
+      tags:
+        -  WorkFlow API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                c_reqkind:
+                  type: string
+                reqData:
+                  type: object
+                  properties:
+                    adapteeId:
+                      type: string
+                    eventData:
+                      type: string
+            example:
+              c_reqkind: GET_EVENT_TYPE
+              reqData:
+                adapteeId: dfw
+                eventData: null
+      security:
+        - ClientAuthOAuth2: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sts:
+                    type: boolean
+                  err:
+                    type: object
+                  result:
+                    type: array
+                    items:
+                     $ref: '#/components/schemas/workflow'
+                  c_reqkind:
+                    type: string
+              example:
+                sts: true
+                err: null
+                result:
+                - $ref: '#/components/examples/approveData'
+        "500":
+          description: Internal Server
+    get:
+      summary: Prepare a process approve
+      tags:
+        - Approve service API
+      security:
+      - ClientAuthOAuth2: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: string
+                  format: binary
+                name:
+                  type: string
+                url:
+                  type: string
+                preparedBy:
+                  type: array
+                  items:
+                    type: string
+                checkedBy:
+                  type: array
+                  items:
+                    type: string
+                approvedBy:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Internal Server
+  "/{id}":
+    get:
+      summary: Get a approve
+      description: he
+      tags:
+        - Approve service API
+      security:
+        - ClientAuthOAuth2: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+              example:
+                sts: true
+                err: null
+                result:
+                - $ref: '#/components/examples/approveData'
+        "500":
+          description: Internal Server
+    put:
+      summary: Update a process approve
+      description: |
+        Currently, only support updating file metadata due to the limitation of Habanerots File API.
+      tags:
+        - Approve service API
+      security:
+        - ClientAuthOAuth2: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum: [APPROVE, REJECT]
+                c_comment:
+                  type: string
+            example:
+              action: APPROVE
+              c_comment: "I agree approve"
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server
+                    
+    delete:
+      summary: Delete a approve process
+      tags:
+        - Approve service API
+      security:
+        - ClientAuthOAuth2: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server
+components:
+  schemas:
+    workflow:
+      type: object
+      properties:
+        id:
+          type: number
+        c_name_service:
+          type: string
+        c_url:
+          type: string
+        i_type:
+          type: number
+        c_comment:
+          type: string
+        c_ui_class_json:
+          type: object
+          properties:
+            height: 
+              type: number
+            width: 
+              type: number
+            component:
+              type: object
+              properties:
+                configure:
+                  type: object
+                name:
+                  type: string
+ securitySchemes:
+    ClientAuthOAuth2:
+      type: oauth2
+      description: |-
+        クライアントアプリケーション向けの認証方法。
+
+        OAuth2で取得したアクセストークンを用い、以下のようにAuthorization ヘッダにアクセストークンを指定します。
+
+        詳細はRFC6750を参照してください。
+
+        ```
+        Authorization: Bearer <アクセストークン>
+        ```
+      flows:
+        implicit:
+          authorizationUrl: 'https://idp.habanerots-common.tirp2.axnavi.com/authorize'
+          scopes:
+            openid: OpenID Connectを利用する際に用いる
+            email: OpenID Connect利用時に、email および email_verified Claim へのアクセス要求に用いる
+            profile: >-
+              OpenID Connect利用時に、ユーザのデフォルトプロフィール Claim （name, locale,
+              updated_atなど）へのアクセス要求に用いる
+        authorizationCode:
+          authorizationUrl: 'https://idp.habanerots-common.tirp2.axnavi.com/authorize'
+          tokenUrl: 'https://idp.habanerots-common.tirp2.axnavi.com/authorize'
+          scopes:
+            openid: OpenID Connectを利用する際に用いる
+            email: OpenID Connect利用時に、email および email_verified Claim へのアクセス要求に用いる
+            profile: >-
+              OpenID Connect利用時に、ユーザのデフォルトプロフィール Claim （name, locale,
+              updated_atなど）へのアクセス要求に用いる
