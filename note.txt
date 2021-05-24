@@ -1,0 +1,72 @@
+1. Nginx:
+---> Phải xóa nginx đi. Rồi cài lại thì mới chạy được (Quên chưa thử upgrade)
+
+2. php-version:
+---> Gỡ php7.3 ra cài lại mới chạy được
+
+3. Mysql phải upgrade mới chạy dc --> nó thay đổi loại Database
+--->>> wo stack upgrade --mysql
+
+------------------------------------
+1. Mysql:
+  Engine: InnoDB  và  MyISAM (hoạt động tốt ở bộ nhớ thấp, đọc nhanh)
+  
+  
+  
+  
+  
+ ---> mysql query cache
+ 
+ --> show global variables like '%max_connections%'
+ 
+ Hiện tại: 151
+ 
+ 
+ 
+ Seting mysql query cache
+ 
+ https://help.tino.org/huong-dan/mariadb-advance-cac-yeu-cau-co-ban-de-mariadb-hoat-dong-tot-nhat/
+ 
+------------------------------------------------------------------------
+https://magz.techover.io/2019/12/24/toi-uu-nginx-php-fpm-cho-luong-truy-cap-lon/
+https://blog.kdata.vn/bat-mi-thu-thuat-cau-hinh-toi-uu-cho-nginx-va-php-fpm-don-gian-196/
+
+Mô hình deploy:
+
+1. Có nên triển khai mysql vs webserver riêng ?
+	- Nếu triển khai riêng thì mysql có yêu cầu gì không? webserver có yêu cầu gì không?
+	- Có lợi thế gì hơn?
+	- Chạy theo kiểu
+			+, mysql replication
+			vs 
+			+, mysql riêng và webserver riêng cái nào lợi hơn???
+
+2. Cấu hình nginx như thế nào cho tối ưu ?  -> dùng "unix socket" thay vì "tcp socket"
+3. Cấu hình php-fpm: 5.6 --> Upgrade lên php-fpm 7.3
+	https://geekflare.com/php-fpm-optimization/
+	
+	
+4. Cấu hình mysql như thế nào? --> Cấu hình: cache query, max connection, buffer,....: MySQLTuner và Anemometer
+   ------ Check lại những câu lệnh tốn nhiều thời gian và chậm để improve --> Cấu hình mysql như thế nào?
+5. Upgrade ubuntu lên 20??? --> WordOps không hỗ trợ
+
+
+
+
+Bạn cho mình thêm các thông tin sau :
+Tốc độ đọc ghi của ổ đĩa bạn là bao nhiêu ?
+Vào thời gian bình thường thì website bạn có truy cập chậm hay không ?
+Mã nguồn source code của bạn là gì ?
+Bạn có sử dụng cache cho website của bạn hay không ?
+Bạn đang dùng handler php nào cho website của bạn ?
+Bạn kiểm tra thấy trong database của bạn có nhưng câu query nào chậm hay không ?
+Băng thông trên VPS của bạn nhưng thế nào ? bạn kiểm tra có tình trạng nghẽn mạng hay không ?
+Mỏi lần website của bạn nhận một request thì load bao nhiêu MB ?
+Tên Website của bạn là gì ?
+Bạn có thể liên hệ với mình qua skype để mình hỗ trợ cho bạn : ekingnguyenhoang
+
+
+ 
+ 
+ 
+ 
